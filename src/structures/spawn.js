@@ -18,7 +18,8 @@ function doActions(spawn) {
         if (getCreepsOfRole(spawn.room.name, role) < maxCreeps[role]) {
             spawn.memory.needsEnergy = true;
             if (spawn.energy >= creepEnergy[role]) {
-                spawn.spawnCreep(creepParts[role], `role-${Memory.creepIndex}`);
+                spawn.spawnCreep(creepParts[role], `${role}-${Memory.creepIndex}`);
+                Game.creeps[`${role}-${Memory.creepIndex}`] = creepMemory[role];
                 Memory.creepIndex += 1;
                 return;
             }

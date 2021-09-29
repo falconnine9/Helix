@@ -5,7 +5,7 @@ export function allHarvesterActions() {
     for (const creepName in Game.creeps) {
         const creep = Game.creeps[creepName];
         if (creep.owner !== OWNER) continue;
-        if (creep.memory.role === "harvester") continue;
+        if (creep.memory.role !== "harvester") continue;
         if (creep.spawning) continue;
         doActions(creep);
     }

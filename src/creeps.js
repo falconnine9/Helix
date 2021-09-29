@@ -1,6 +1,6 @@
 export const maxCreeps = {
     builder: 2,
-    defender: 4,
+    defender: 6,
     harvester: 3,
     hauler: 3,
     upgrader: 2
