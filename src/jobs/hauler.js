@@ -1,12 +1,8 @@
-import { OWNER } from 'globals';
+import { listCreepsOfRole } from '../util';
 
 
-export function allHaulerActions() {
-    for (const creepName in Game.creeps) {
-        const creep = Game.creeps[creepName];
-        if (creep.owner !== OWNER) continue;
-        if (creep.memory.role !== "hauler") continue;
-        if (creep.spawning) continue;
+export function allHaulerActions(room) {
+    for (const creep of listCreepsOfRole(room, "hauler")) {
         doActions(creep);
     }
 }

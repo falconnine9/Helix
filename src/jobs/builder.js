@@ -1,12 +1,8 @@
-import { OWNER } from 'globals';
+import { listCreepsOfRole } from '../util';
 
 
-export function allBuilderActions() {
-    for (const creepName in Game.creeps) {
-        const creep = Game.creeps[creepName];
-        if (creep.owner !== OWNER) continue;
-        if (creep.memory.role !== "builder") continue;
-        if (creep.spawning) continue;
+export function allBuilderActions(room) {
+    for (const creep of listCreepsOfRole(room, "builder")) {
         doActions(creep);
     }
 }
