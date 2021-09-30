@@ -21,14 +21,8 @@ if (!Memory.creepIndex) {
 
 
 export function loop() {
-    let rooms = [];
-    for (const spawn in Game.spawns) {
-        if (!rooms.includes(Game.spawns[spawn].room.name)) {
-            rooms.push(Game.spawns[spawn].room.name);
-        }
-    }
-
-    for (const room of rooms) {
+    for (const roomName of Game.rooms) {
+        const room = Game.rooms[roomName];
         for (const jobFunction of jobs) {
             jobFunction(room);
         }

@@ -19,7 +19,7 @@ function doActions(creep) {
         }
         else {
             const container = creep.room.findClosestByRange(FIND_STRUCTURES, {
-                filter: (s) => s.structureType === STRUCTURE_STORAGE
+                filter: s => s.structureType === STRUCTURE_STORAGE
             });
             if (container) {
                 const status = creep.transfer(container, RESOURCE_ENERGY);

@@ -7,7 +7,7 @@ export function getCreepsOfRole(room, role) {
         const creep = Game.creeps[creepName];
 
         if (creep.owner !== OWNER) continue;
-        if (creep.room.name === name) continue;
+        if (creep.room.name === room) continue;
         if (creep.memory.role === role) amount += 1;
     }
     return amount;

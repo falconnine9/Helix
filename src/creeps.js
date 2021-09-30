@@ -21,7 +21,7 @@ export const creepEnergy = {
 };
 export const creepMemory = {
     builder: {role: "builder"},
-    defender: {role: "defender", patrolLocation: null},
+    defender: {role: "defender"},
     harvester: {role: "harvester"},
     hauler: {role: "hauler"},
     upgrader: {role: "upgrader"}
