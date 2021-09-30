@@ -1,5 +1,4 @@
 const utils = require("utils");
-const energyThreshold = 1000;
 
 
 module.exports.allActions = (room) => {
@@ -14,12 +13,23 @@ function doActions(creep) {
         const container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
             filter: s => s.structureType === STRUCTURE_STORAGE
         });
-        if (!container) return;
-
-        if (container.store.getUsedCapacity() > energyThreshold) {
+        if (container) {
             const status = creep.withdraw(container, RESOURCE_ENERGY, creep.store.getFreeCapacity());
             if (status === ERR_NOT_IN_RANGE) {
                 creep.moveTo(container);
+            }
+        }
+        else {
+            const spawn = creep.pos.findClosestByRange(FIND_MY_SPAWNS);
+            if (!spawn) return;
+            if (spawn.memory.needsEnergy) return;
+                    
+            const status = creep.withdraw(spawn, RESOURCE_ENERGY, creep.store.getFreeCapacity());
+            if (status === ERR_NOT_IN_RANGE) {
+                creep.moveTo(spawn);
+            }
+            else if (status === ERR_NOT_ENOUGH_RESOURCES) {
+                creep.withdraw(container, RESOURCE_ENERGY, spawn.store.getUsedCapacity());
             }
         }
     }

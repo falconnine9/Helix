@@ -9,7 +9,9 @@ module.exports.allActions = (room) => {
 
 
 function doActions(creep) {
-    const source = creep.pos.findClosestByRange(FIND_SOURCES);
+    const source = creep.pos.findClosestByRange(FIND_SOURCES, {
+        filter: s => s.energy > 0
+    });
     if (!source) return;
 
     const status = creep.harvest(source);

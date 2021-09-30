@@ -16,4 +16,31 @@ function doActions(creep) {
             creep.moveTo(hostile);
         }
     }
+    else {
+        if (creep.memory.patrolLocation) {
+            const x = creep.memory.patrolLocation[0];
+            const y = creep.memory.patrolLocation[1];
+            creep.moveTo(x, y);
+
+            if (creep.pos.x === x && creep.pos.y === y) {
+                creep.memory.patrolLocation = null;
+            }
+        }
+        else {
+            const terrain = Game.map.getRoomTerrain(creep.room.name);
+            let iteration = 0;
+
+            let randX = Math.round((Math.random() * 48) + 1);
+            let randY = Math.round((Math.random() * 48) + 1);
+            while (terrain.get(randX, randY) !== 0) {
+                if (iteration === 10) return;
+                iteration += 1;
+
+                randX = Math.round((Math.random() * 48) + 1);
+                randY = Math.round((Math.random() * 48) + 1);
+            }
+
+            creep.memory.patrolLocation = [randX, randY];
+        }
+    }
 }

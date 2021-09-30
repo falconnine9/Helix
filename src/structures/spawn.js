@@ -10,6 +10,8 @@ module.exports.allActions = (room) => {
 
 
 function doActions(spawn) {
+    let willSpawn = false;
+
     for (const role in creepInfo.maxCreeps) {
         if (utils.getCreepsOfRole(spawn.room.name, role) < creepInfo.maxCreeps[role]) {
             if (spawn.energy >= creepInfo.creepEnergy[role]) {
@@ -19,6 +21,14 @@ function doActions(spawn) {
                 Memory.creepIndex += 1;
                 return;
             }
+            else {
+                willSpawn = true;
+                spawn.memory.needsEnergy = true;
+            }
         }
+    }
+
+    if (!willSpawn) {
+        spawn.memory.needsEnergy = false;
     }
 }

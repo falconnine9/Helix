@@ -18,25 +18,38 @@ function doActions(creep) {
             }
         }
         else {
-            const container = creep.room.findClosestByRange(FIND_STRUCTURES, {
-                filter: s => s.structureType === STRUCTURE_STORAGE
+            const extension = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: s => s.structureType === STRUCTURE_EXTENSION && s.store.getFreeCapacity() !== 0
             });
-            if (container) {
-                const status = creep.transfer(container, RESOURCE_ENERGY);
+            if (extension) {
+                const status = creep.transfer(extension, RESOURCE_ENERGY);
                 if (status === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(container);
+                    creep.moveTo(extension);
+                }
+            }
+            else {
+                const container = creep.room.findClosestByRange(FIND_STRUCTURES, {
+                    filter: s => s.structureType === STRUCTURE_STORAGE
+                });
+                if (container) {
+                    const status = creep.transfer(container, RESOURCE_ENERGY);
+                    if (status === ERR_NOT_IN_RANGE) {
+                        creep.moveTo(container);
+                    }
                 }
             }
         }
     }
 
     else {
-        const resource = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
-        if (!resource) return;
+        const resources = creep.room.find(FIND_DROPPED_RESOURCES);
+        if (resources.length === 0) return;
+        resources.sort((a, b) => a.amount - b.amount);
+        resources.reverse()
 
-        const status = creep.pickup(resource);
+        const status = creep.pickup(resources[0]);
         if (status === ERR_NOT_IN_RANGE) {
-            creep.moveTo(resource);
+            creep.moveTo(resources[0]);
         }
     }
 }

@@ -30,13 +30,14 @@ function doActions(creep) {
             else {
                 const spawn = creep.pos.findClosestByRange(FIND_MY_SPAWNS);
                 if (!spawn) return;
+                if (spawn.memory.needsEnergy) return;
                     
                 const status = creep.withdraw(spawn, RESOURCE_ENERGY, creep.store.getFreeCapacity());
                 if (status === ERR_NOT_IN_RANGE) {
                     creep.moveTo(spawn);
                 }
                 else if (status === ERR_NOT_ENOUGH_RESOURCES) {
-                    creep.withdraw(container, RESOURCE_ENERGY, container.store.getUsedCapacity());
+                    creep.withdraw(spawn, RESOURCE_ENERGY, spawn.store.getUsedCapacity());
                 }
             }
         }
@@ -55,13 +56,7 @@ function doActions(creep) {
         if (structs.length === 0) return;
         structs.sort((a, b) => (a.hitsMax - a.hits) - (b.hitsMax - b.hits));
 
-        if (creep.store.getFreeCapacity() === 0) {
-            const status = creep.repair(structs[0]);
-            if (status === ERR_NOT_IN_RANGE) {
-                creep.moveTo(structs[0]);
-            }
-        }
-        else {
+        if (creep.store.getUsedCapacity() === 0) {
             if (creep.store.getUsedCapacity() >= structs[0].hitsMax - structs[0].hits) {
                 const status = creep.repair(structs[0]);
                 if (status === ERR_NOT_IN_RANGE) {
@@ -81,8 +76,9 @@ function doActions(creep) {
                 else {
                     const spawn = creep.pos.findClosestByRange(FIND_MY_SPAWNS);
                     if (!spawn) return;
+                    if (spawn.memory.needsEnergy) return;
                     
-                    const status = creep.widthdraw(spawn, RESOURCE_ENERGY, creep.store.getFreeCapacity());
+                    const status = creep.withdraw(spawn, RESOURCE_ENERGY, creep.store.getFreeCapacity());
                     if (status === ERR_NOT_IN_RANGE) {
                         creep.moveTo(spawn);
                     }
@@ -90,6 +86,12 @@ function doActions(creep) {
                         creep.withdraw(container, RESOURCE_ENERGY, spawn.store.getUsedCapacity());
                     }
                 }
+            }
+        }
+        else {
+            const status = creep.repair(structs[0]);
+            if (status === ERR_NOT_IN_RANGE) {
+                creep.moveTo(structs[0]);
             }
         }
     }
