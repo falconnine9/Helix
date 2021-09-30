@@ -1,8 +1,8 @@
-import { listCreepsOfRole } from '../util';
+const utils = require("utils");
 
 
-export function allHarvesterActions(room) {
-    for (const creep of listCreepsOfRole(room, "harvester")) {
+module.exports.allActions = (room) => {
+    for (const creep of utils.listCreepsOfRole(room.name, "harvester")) {
         doActions(creep);
     }
 }

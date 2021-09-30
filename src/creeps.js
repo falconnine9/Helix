@@ -1,25 +1,25 @@
-export const maxCreeps = {
+module.exports.maxCreeps = {
     builder: 2,
     defender: 6,
     harvester: 3,
     hauler: 3,
     upgrader: 2
 };
-export const creepParts = {
+module.exports.creepParts = {
     builder: [CARRY, MOVE, WORK],
     defender: [ATTACK, ATTACK, MOVE, MOVE],
     harvester: [MOVE, WORK, WORK],
     hauler: [CARRY, CARRY, CARRY, MOVE, MOVE],
     upgrader: [CARRY, MOVE]
 };
-export const creepEnergy = {
+module.exports.creepEnergy = {
     builder: 200,
     defender: 260,
     harvester: 250,
     hauler: 250,
     upgrader: 100
 };
-export const creepMemory = {
+module.exports.creepMemory = {
     builder: {role: "builder"},
     defender: {role: "defender"},
     harvester: {role: "harvester"},

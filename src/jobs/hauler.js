@@ -1,8 +1,8 @@
-import { listCreepsOfRole } from '../util';
+const utils = require("utils");
 
 
-export function allHaulerActions(room) {
-    for (const creep of listCreepsOfRole(room, "hauler")) {
+module.exports.allActions = (room) => {
+    for (const creep of utils.listCreepsOfRole(room.name, "hauler")) {
         doActions(creep);
     }
 }
@@ -11,7 +11,7 @@ export function allHaulerActions(room) {
 function doActions(creep) {
     if (creep.store.getFreeCapacity() === 0) {
         const spawn = creep.pos.findClosestByRange(FIND_MY_SPAWNS);
-        if (spawn.store.getFreeCapacity() > 0) {
+        if (spawn.store.getFreeCapacity() !== 0) {
             const status = creep.transfer(spawn, RESOURCE_ENERGY);
             if (status === ERR_NOT_IN_RANGE) {
                 creep.moveTo(spawn);

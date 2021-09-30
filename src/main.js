@@ -1,18 +1,10 @@
-import { allBuilderActions } from 'jobs/builder';
-import { allDefenderActions } from 'jobs/defender';
-import { allHarvesterActions } from 'jobs/harvester';
-import { allHaulerActions } from 'jobs/hauler';
-
-import { allSpawnActions } from 'structures/spawn';
-
-import { clearUnusedMemory } from 'global-actions/memory';
-
 const jobs = [
-    allBuilderActions,
-    allDefenderActions,
-    allHarvesterActions,
-    allHaulerActions,
-    allSpawnActions
+    require("jobs.builder").allActions,
+    require("jobs.defender").allActions,
+    require("jobs.harvester").allActions,
+    require("jobs.hauler").allActions,
+    require("jobs.upgrader").allActions,
+    require("structures.spawn").allActions
 ];
 
 if (!Memory.creepIndex) {
@@ -20,13 +12,13 @@ if (!Memory.creepIndex) {
 }
 
 
-export function loop() {
-    for (const roomName of Game.rooms) {
+module.exports.loop = () => {
+    for (const roomName in Game.rooms) {
         const room = Game.rooms[roomName];
         for (const jobFunction of jobs) {
             jobFunction(room);
         }
     }
 
-    clearUnusedMemory();
+    require("global-actions.memory").clearUnusedMemory();
 }

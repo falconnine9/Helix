@@ -1,10 +1,9 @@
-import { listCreepsOfRole } from '../util';
+const utils = require("utils");
+const energyThreshold = 1000;
 
-const ENERGY_THRESHOLD = 1000;
 
-
-export function allUpgraderActions(room) {
-    for (const creep of listCreepsOfRole(room, "upgrader")) {
+module.exports.allActions = (room) => {
+    for (const creep of utils.listCreepsOfRole(room.name, "upgrader")) {
         doActions(creep);
     }
 }
@@ -17,9 +16,11 @@ function doActions(creep) {
         });
         if (!container) return;
 
-        const status = creep.withdraw(container, RESOURCE_ENERGY, creep.store.getFreeCapacity());
-        if (status === ERR_NOT_IN_RANGE) {
-            creep.moveTo(container);
+        if (container.store.getUsedCapacity() > energyThreshold) {
+            const status = creep.withdraw(container, RESOURCE_ENERGY, creep.store.getFreeCapacity());
+            if (status === ERR_NOT_IN_RANGE) {
+                creep.moveTo(container);
+            }
         }
     }
     
