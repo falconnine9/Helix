@@ -51,10 +51,17 @@ function doActions(creep) {
 
     else {
         const structs = creep.room.find(FIND_MY_STRUCTURES, {
-            filter: s => s.hits < s.hitsMax
+            filter: s => {
+                if (s.structureType === STRUCTURE_WALL) {
+                    return s.hits < 4000;
+                } else {
+                    return s.hits < Math.round(s.hitsMax / 2);
+                }
+            }
         });
         if (structs.length === 0) return;
         structs.sort((a, b) => (a.hitsMax - a.hits) - (b.hitsMax - b.hits));
+        structs.reverse();
 
         if (creep.store.getUsedCapacity() === 0) {
             if (creep.store.getUsedCapacity() >= structs[0].hitsMax - structs[0].hits) {
@@ -64,6 +71,9 @@ function doActions(creep) {
                 }
             }
             else {
+                const container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: s => s.structureType === STRUCTURE_STORAGE
+                });
                 if (container) {
                     const status = creep.withdraw(container, RESOURCE_ENERGY, creep.store.getFreeCapacity());
                     if (status === ERR_NOT_IN_RANGE) {
