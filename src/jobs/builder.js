@@ -56,7 +56,7 @@ function doActions(creep) {
                     if (s.structureType === STRUCTURE_WALL || s.structureType === STRUCTURE_RAMPART) {
                         return s.hits < 7000;
                     } else {
-                        return s.hits < Math.round(s.hitsMax / 2);
+                        return s.hits <= Math.round(s.hitsMax / 2);
                     }
                 }
             });
