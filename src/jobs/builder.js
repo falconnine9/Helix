@@ -50,24 +50,37 @@ function doActions(creep) {
     }
 
     else {
-        const structs = creep.room.find(FIND_MY_STRUCTURES, {
-            filter: s => {
-                if (s.structureType === STRUCTURE_WALL) {
-                    return s.hits < 4000;
-                } else {
-                    return s.hits < Math.round(s.hitsMax / 2);
+        if (!creep.memory.repairStruct) {
+            const structs = creep.room.find(FIND_MY_STRUCTURES, {
+                filter: s => {
+                    if (s.structureType === STRUCTURE_WALL || s.structureType === STRUCTURE_RAMPART) {
+                        return s.hits < 7000;
+                    } else {
+                        return s.hits < Math.round(s.hitsMax / 2);
+                    }
                 }
+            });
+            if (structs.length === 0) return;
+            structs.sort((a, b) => (a.hitsMax - a.hits) - (b.hitsMax - b.hits));
+            structs.reverse();
+            creep.memory.repairStruct = structs[0].id;
+        }
+        const struct = Game.getObjectById(creep.memory.repairStruct);
+        if (struct.structureType === STRUCTURE_WALL || struct.structureType === STRUCTURE_RAMPART) {
+            if (struct.hits >= 7000) {
+                creep.memory.repairStruct = null;
             }
-        });
-        if (structs.length === 0) return;
-        structs.sort((a, b) => (a.hitsMax - a.hits) - (b.hitsMax - b.hits));
-        structs.reverse();
+        } else {
+            if (struct.hits === struct.hitsMax) {
+                creep.memory.repairStruct = null;
+            }
+        }
 
         if (creep.store.getUsedCapacity() === 0) {
-            if (creep.store.getUsedCapacity() >= structs[0].hitsMax - structs[0].hits) {
-                const status = creep.repair(structs[0]);
+            if (creep.store.getUsedCapacity() >= struct.hitsMax - struct.hits) {
+                const status = creep.repair(struct);
                 if (status === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(structs[0]);
+                    creep.moveTo(struct);
                 }
             }
             else {
@@ -80,7 +93,7 @@ function doActions(creep) {
                         creep.moveTo(container);
                     }
                     else if (status === ERR_NOT_ENOUGH_RESOURCES) {
-                        creep.withdraw(container, RESOURCE_ENERGY, container.store.getUsedCapacity())
+                        creep.withdraw(container, RESOURCE_ENERGY, container.store.getUsedCapacity());
                     }
                 }
                 else {
@@ -99,9 +112,9 @@ function doActions(creep) {
             }
         }
         else {
-            const status = creep.repair(structs[0]);
+            const status = creep.repair(struct);
             if (status === ERR_NOT_IN_RANGE) {
-                creep.moveTo(structs[0]);
+                creep.moveTo(struct);
             }
         }
     }

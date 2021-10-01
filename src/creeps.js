@@ -18,11 +18,11 @@
  */
 
 module.exports.maxCreeps = {
-    builder: 1,
+    builder: 2,
     defender: 3,
-    harvester: 1,
+    harvester: 3,
     hauler: 4,
-    upgrader: 5
+    upgrader: 4
 };
 module.exports.creepParts = {
     builder: [CARRY, MOVE, WORK],
@@ -39,7 +39,7 @@ module.exports.creepEnergy = {
     upgrader: 300
 };
 module.exports.creepMemory = {
-    builder: {role: "builder"},
+    builder: {role: "builder", repairStruct: null},
     defender: {role: "defender", patrolLocation: null},
     harvester: {role: "harvester"},
     hauler: {role: "hauler"},
