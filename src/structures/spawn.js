@@ -1,4 +1,4 @@
-const creepInfo = require("creeps");
+const allConfig = require("config").config;
 const utils = require("utils");
 
 
@@ -11,17 +11,23 @@ module.exports.allActions = (room) => {
 
 function doActions(spawn) {
     let willSpawn = false;
+    let config;
+    if (spawn.room.name in allConfig) {
+        config = allConfig[spawn.room.name];
+    } else {
+        config = allConfig["global"];
+    }
 
-    for (const role in creepInfo.maxCreeps) {
-        if (utils.getCreepsOfRole(spawn.room.name, role) < creepInfo.maxCreeps[role]) {
-            if (spawn.energy >= creepInfo.creepEnergy[role]) {
-                spawn.spawnCreep(creepInfo.creepParts[role], `${role}-${Memory.creepIndex}`, {
-                    memory: creepInfo.creepMemory[role]
-                });
+    for (const role in config.maxCreeps) {
+        if (utils.getCreepsOfRole(spawn.room.name, role) < config.maxCreeps[role]) {
+            const status = spawn.spawnCreep(config.creepParts[role], `${role}-${Memory.creepIndex}`, {
+                memory: config.creepMemory[role]
+            });
+            if (status === OK) {
+                Game.creeps[`${role}-${Memory.creepIndex}`].memory.origin = spawn.room.name;
                 Memory.creepIndex += 1;
                 return;
-            }
-            else {
+            } else if (status === ERR_NOT_ENOUGH_ENERGY) {
                 willSpawn = true;
                 spawn.memory.needsEnergy = true;
             }

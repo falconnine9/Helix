@@ -15,7 +15,7 @@ function doActions(tower) {
             tower.memory.needsEnergy = true;
         }
         else {
-            if (tower.store.getUsedCapacity() === 0) {
+            if (tower.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
                 tower.memory.needsEnergy = true;
             }
         }
@@ -31,7 +31,7 @@ function doActions(tower) {
                 tower.memory.needsEnergy = true;
             }
             else {
-                if (tower.store.getUsedCapacity() === 0) {
+                if (tower.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
                     tower.memory.needsEnergy = true;
                 }
             }

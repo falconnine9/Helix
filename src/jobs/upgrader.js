@@ -9,12 +9,12 @@ module.exports.allActions = (room) => {
 
 
 function doActions(creep) {
-    if (creep.store.getUsedCapacity() === 0) {
+    if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
         const container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
             filter: s => s.structureType === STRUCTURE_STORAGE
         });
         if (container) {
-            const status = creep.withdraw(container, RESOURCE_ENERGY, creep.store.getFreeCapacity());
+            const status = creep.withdraw(container, RESOURCE_ENERGY, creep.store.getFreeCapacity(RESOURCE_ENERGY));
             if (status === ERR_NOT_IN_RANGE) {
                 creep.moveTo(container);
             }
@@ -24,12 +24,12 @@ function doActions(creep) {
             if (!spawn) return;
             if (spawn.memory.needsEnergy) return;
                     
-            const status = creep.withdraw(spawn, RESOURCE_ENERGY, creep.store.getFreeCapacity());
+            const status = creep.withdraw(spawn, RESOURCE_ENERGY, creep.store.getFreeCapacity(RESOURCE_ENERGY));
             if (status === ERR_NOT_IN_RANGE) {
                 creep.moveTo(spawn);
             }
             else if (status === ERR_NOT_ENOUGH_RESOURCES) {
-                creep.withdraw(container, RESOURCE_ENERGY, spawn.store.getUsedCapacity());
+                creep.withdraw(container, RESOURCE_ENERGY, spawn.store.getUsedCapacity(RESOURCE_ENERGY));
             }
         }
     }

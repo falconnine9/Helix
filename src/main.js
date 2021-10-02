@@ -2,6 +2,7 @@ const jobs = [
     require("structures.spawn").allActions,
     require("jobs.builder").allActions,
     require("jobs.defender").allActions,
+    require("jobs.filler").allActions,
     require("jobs.harvester").allActions,
     require("jobs.hauler").allActions,
     require("jobs.upgrader").allActions,

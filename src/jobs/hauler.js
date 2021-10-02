@@ -9,9 +9,9 @@ module.exports.allActions = (room) => {
 
 
 function doActions(creep) {
-    if (creep.store.getFreeCapacity() === 0) {
+    if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
         const spawn = creep.pos.findClosestByRange(FIND_MY_SPAWNS);
-        if (spawn.store.getFreeCapacity() !== 0) {
+        if (spawn.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
             const status = creep.transfer(spawn, RESOURCE_ENERGY);
             if (status === ERR_NOT_IN_RANGE) {
                 creep.moveTo(spawn);
@@ -19,7 +19,7 @@ function doActions(creep) {
         }
         else {
             const extension = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: s => s.structureType === STRUCTURE_EXTENSION && s.store.getFreeCapacity() !== 0
+                filter: s => s.structureType === STRUCTURE_EXTENSION && s.store.getFreeCapacity(RESOURCE_ENERGY) > 0
             });
             if (extension) {
                 const status = creep.transfer(extension, RESOURCE_ENERGY);
@@ -28,7 +28,7 @@ function doActions(creep) {
                 }
             }
             else {
-                const container = creep.room.findClosestByRange(FIND_STRUCTURES, {
+                const container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: s => s.structureType === STRUCTURE_STORAGE
                 });
                 if (container) {
