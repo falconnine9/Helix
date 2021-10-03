@@ -1,5 +1,6 @@
 const jobs = [
     require("structures.spawn").allActions,
+	require("structures.tower").allActions,
     require("jobs.builder").allActions,
     require("jobs.defender").allActions,
     require("jobs.filler").allActions,
