@@ -12,7 +12,7 @@ function doActions(creep) {
     if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
         const container = creep.room.storage;
         if (container) {
-            const status = creep.withdraw(container, RESOURCE_ENERGY, creep.store.getFreeCapacity(RESOURCE_ENERGY));
+            const status = creep.withdraw(container, RESOURCE_ENERGY);
             if (status === ERR_NOT_IN_RANGE) {
                 creep.moveTo(container);
             }
