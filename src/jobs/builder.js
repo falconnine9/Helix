@@ -73,6 +73,11 @@ function doActions(creep) {
             creep.memory.repairStruct = structs[0].id;
         }
         const struct = Game.getObjectById(creep.memory.repairStruct);
+        if (!struct) {
+            creep.memory.repairStruct = null;
+            return;
+        }
+
         if (struct.structureType === STRUCTURE_WALL || struct.structureType === STRUCTURE_RAMPART) {
             if (struct.hits >= config.wallLimit) {
                 creep.memory.repairStruct = null;

@@ -13,41 +13,14 @@ function doActions(creep) {
         filter: s => {
             if (s.structureType !== STRUCTURE_TOWER) {
                 return false;
-            } else if (s.store.getUsedCapacity(RESOURCE_ENERGY) >= s.store.getCapacity(RESOURCE_ENERGY)) {
-                return false;
-            } else {
+            } 
+            if (s.store.getUsedCapacity(RESOURCE_ENERGY) < Math.round(s.store.getCapacity(RESOURCE_ENERGY) / 2)) {
                 return true;
             }
         }
     });
     if (structs.length > 0) {
-        structs.sort((a, b) => {
-            const aDiff = a.store.getCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY);
-            const bDiff = b.store.getCapacity(RESOURCE_ENERGY) - b.store.getUsedCapacity(RESOURCE_ENERGY);
-            return aDiff - bDiff;
-        });
-
-        if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
-            const status = creep.transfer(structs[0], RESOURCE_ENERGY);
-            if (status === ERR_NOT_IN_RANGE) {
-                creep.moveTo(structs[0]);
-            }
-        }
-        else {
-            const container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: s => s.structureType === STRUCTURE_STORAGE
-            });
-
-            if (container) {
-                const status = creep.withdraw(container, RESOURCE_ENERGY, creep.store.getFreeCapacity(RESOURCE_ENERGY));
-                if (status === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(container);
-                }
-                else if (status === ERR_NOT_ENOUGH_RESOURCES) {
-                    creep.withdraw(container, RESOURCE_ENERGY, spawn.store.getUsedCapacity(RESOURCE_ENERGY));
-                }
-            }
-        }
+        fillTowers(structs);
     }
 
     else {
@@ -57,7 +30,16 @@ function doActions(creep) {
         });
         if (!container) return;
 
-        if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
+        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
+            const status = creep.withdraw(container, RESOURCE_ENERGY, creep.store.getFreeCapacity(RESOURCE_ENERGY));
+            if (status === ERR_NOT_IN_RANGE) {
+                creep.moveTo(container);
+            }
+            else if (status === ERR_NOT_ENOUGH_RESOURCES) {
+                creep.withdraw(container, RESOURCE_ENERGY, container.store.getUsedCapacity(RESOURCE_ENERGY));
+            }
+        }
+        else {
             if (spawn.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
                 const status = creep.transfer(spawn, RESOURCE_ENERGY);
                 if (status === ERR_NOT_IN_RANGE) {
@@ -74,16 +56,52 @@ function doActions(creep) {
                         creep.moveTo(extension);
                     }
                 }
+                else {
+                    const structs = creep.room.find(FIND_MY_STRUCTURES, {
+                        filter: s => {
+                            if (s.structureType !== STRUCTURE_TOWER) {
+                                return false;
+                            } 
+                            if (s.store.getUsedCapacity(RESOURCE_ENERGY) < s.store.getCapacity(RESOURCE_ENERGY)) {
+                                return true;
+                            }
+                        }
+                    });
+                    fillTowers(creep, structs);
+                }
             }
         }
-        else {
+    }
+}
+
+
+function fillTowers(creep, structs) {
+    structs.sort((a, b) => {
+        const aDiff = a.store.getCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY);
+        const bDiff = b.store.getCapacity(RESOURCE_ENERGY) - b.store.getUsedCapacity(RESOURCE_ENERGY);
+        return aDiff - bDiff;
+    });
+    structs.reverse();
+
+    if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
+        const container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: s => s.structureType === STRUCTURE_STORAGE
+        });
+
+        if (container) {
             const status = creep.withdraw(container, RESOURCE_ENERGY, creep.store.getFreeCapacity(RESOURCE_ENERGY));
             if (status === ERR_NOT_IN_RANGE) {
                 creep.moveTo(container);
             }
             else if (status === ERR_NOT_ENOUGH_RESOURCES) {
-                creep.withdraw(container, RESOURCE_ENERGY, container.store.getUsedCapacity(RESOURCE_ENERGY));
+                creep.withdraw(container, RESOURCE_ENERGY, spawn.store.getUsedCapacity(RESOURCE_ENERGY));
             }
+        }
+    }
+    else {
+        const status = creep.transfer(structs[0], RESOURCE_ENERGY);
+        if (status === ERR_NOT_IN_RANGE) {
+            creep.moveTo(structs[0]);
         }
     }
 }

@@ -5,6 +5,8 @@
  * entry for the room it'll work off the global entry
  * 
  *   Variables
+ * owner - Your username
+ * signText - The text to sign room controllers with
  * wallLimit - The limit to repair walls and ramparts to
  * maxCreeps - The maximum amount of creeps allowed to
  *   be owned by the room
@@ -14,11 +16,13 @@
 
 module.exports.config = {
     global: {
+        owner: "OwnerName",
+        signText: "example",
         wallLimit: 7000,
         maxCreeps: {
-            builder: 2,
-            defender: 2,
-            filler: 1,
+            builder: 0,
+            defender: 1,
+            filler: 2,
             harvester: 3,
             hauler: 4,
             upgrader: 4

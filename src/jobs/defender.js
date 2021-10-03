@@ -1,4 +1,5 @@
 const utils = require("utils");
+const allConfig = require("config").config;
 
 
 module.exports.allActions = (room) => {
@@ -17,30 +18,44 @@ function doActions(creep) {
         }
     }
     else {
-        if (creep.memory.patrolLocation) {
-            const x = creep.memory.patrolLocation[0];
-            const y = creep.memory.patrolLocation[1];
-            creep.moveTo(x, y);
-
-            if (creep.pos.x === x && creep.pos.y === y) {
-                creep.memory.patrolLocation = null;
+        let config;
+        if (creep.room.name in allConfig) {
+            config = allConfig[creep.room.name];
+        } else {
+            config = allConfig["global"];
+        }
+        if (creep.room.controller.sign.username !== config.owner) {
+            const status = creep.signController(creep.room.controller, config.signText);
+            if (status === ERR_NOT_IN_RANGE) {
+                creep.moveTo(creep.room.controller);
             }
         }
         else {
-            const terrain = Game.map.getRoomTerrain(creep.room.name);
-            let iteration = 0;
+            if (creep.memory.patrolLocation) {
+                const x = creep.memory.patrolLocation[0];
+                const y = creep.memory.patrolLocation[1];
+                creep.moveTo(x, y);
 
-            let randX = Math.round((Math.random() * 48) + 1);
-            let randY = Math.round((Math.random() * 48) + 1);
-            while (terrain.get(randX, randY) !== 0) {
-                if (iteration === 10) return;
-                iteration += 1;
-
-                randX = Math.round((Math.random() * 48) + 1);
-                randY = Math.round((Math.random() * 48) + 1);
+                if (creep.pos.x === x && creep.pos.y === y) {
+                    creep.memory.patrolLocation = null;
+                }
             }
+            else {
+                const terrain = Game.map.getRoomTerrain(creep.room.name);
+                let iteration = 0;
 
-            creep.memory.patrolLocation = [randX, randY];
+                let randX = Math.round((Math.random() * 48) + 1);
+                let randY = Math.round((Math.random() * 48) + 1);
+                while (terrain.get(randX, randY) !== 0) {
+                    if (iteration === 10) return;
+                    iteration += 1;
+
+                    randX = Math.round((Math.random() * 48) + 1);
+                    randY = Math.round((Math.random() * 48) + 1);
+                }
+
+                creep.memory.patrolLocation = [randX, randY];
+            }
         }
     }
 }

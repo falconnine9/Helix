@@ -1,3 +1,6 @@
+const allConfig = require("config").config;
+
+
 module.exports.allActions = (room) => {
     for (const tower of room.find(FIND_MY_STRUCTURES, {
         filter: s => s.structureType === STRUCTURE_TOWER
@@ -10,15 +13,7 @@ module.exports.allActions = (room) => {
 function doActions(tower) {
     const hostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
     if (hostile) {
-        const status = tower.attack(hostile);
-        if (status === ERR_NOT_ENOUGH_ENERGY) {
-            tower.memory.needsEnergy = true;
-        }
-        else {
-            if (tower.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-                tower.memory.needsEnergy = true;
-            }
-        }
+        tower.attack(hostile);
     }
 
     else {
@@ -26,15 +21,31 @@ function doActions(tower) {
             filter: c => c.hits < c.hitsMax
         });
         if (friendly) {
-            const status = tower.heal(friendly);
-            if (status === ERR_NOT_ENOUGH_ENERGY) {
-                tower.memory.needsEnergy = true;
+            tower.heal(friendly);
+        }
+
+        else {
+            let config;
+            if (tower.room.name in allConfig) {
+                config = allConfig[tower.room.name];
+            } else {
+                config = allConfig["global"];
             }
-            else {
-                if (tower.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-                    tower.memory.needsEnergy = true;
+
+            const structs = tower.room.find(FIND_STRUCTURES, {
+                filter: s => {
+                    if (s.structureType === STRUCTURE_WALL || s.structureType === STRUCTURE_RAMPART) {
+                        return s.hits < config.wallLimit;
+                    } else {
+                        return s.hits < Math.round(s.hitsMax / 1.5);
+                    }
                 }
-            }
+            });
+            if (structs.length === 0) return;
+            structs.sort((a, b) => (a.hitsMax - a.hits) - (b.hitsMax - b.hits));
+            structs.reverse();
+
+            tower.repair(structs[0]);
         }
     }
 }
