@@ -20,7 +20,7 @@ function doActions(creep) {
         }
     });
     if (structs.length > 0) {
-        fillTowers(structs);
+        fillTowers(creep, structs);
     }
 
     else {
