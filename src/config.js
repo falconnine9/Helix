@@ -38,7 +38,7 @@ module.exports.config = {
             upgrader: [CARRY, CARRY, MOVE, MOVE, WORK]
         },
         creepMemory: {
-            builder: {role: "builder", repairStruct: null},
+            builder: {role: "builder"},
             conqueror: {role: "conqueror"},
             defender: {role: "defender", patrolLocation: null},
             filler: {role: "filler"},

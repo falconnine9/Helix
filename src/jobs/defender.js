@@ -34,10 +34,11 @@ function doActions(creep) {
             if (creep.memory.patrolLocation) {
                 const x = creep.memory.patrolLocation[0];
                 const y = creep.memory.patrolLocation[1];
-                creep.moveTo(x, y);
 
                 if (creep.pos.x === x && creep.pos.y === y) {
                     creep.memory.patrolLocation = null;
+                } else {
+                    creep.moveTo(x, y);
                 }
             }
             else {

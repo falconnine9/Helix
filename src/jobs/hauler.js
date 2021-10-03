@@ -28,9 +28,7 @@ function doActions(creep) {
                 }
             }
             else {
-                const container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: s => s.structureType === STRUCTURE_STORAGE
-                });
+                const container = creep.room.storage;
                 if (container) {
                     const status = creep.transfer(container, RESOURCE_ENERGY);
                     if (status === ERR_NOT_IN_RANGE) {
