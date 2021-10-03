@@ -21,6 +21,7 @@ module.exports.config = {
         wallLimit: 7000,
         maxCreeps: {
             builder: 0,
+            conqueror: 0,
             defender: 1,
             filler: 2,
             harvester: 3,
@@ -29,6 +30,7 @@ module.exports.config = {
         },
         creepParts: {
             builder: [CARRY, MOVE, WORK],
+            conqueror: [CLAIM, MOVE],
             defender: [ATTACK, ATTACK, MOVE, MOVE],
             filler: [CARRY, MOVE],
             harvester: [MOVE, WORK, WORK],
@@ -37,6 +39,7 @@ module.exports.config = {
         },
         creepMemory: {
             builder: {role: "builder", repairStruct: null},
+            conqueror: {role: "conqueror"},
             defender: {role: "defender", patrolLocation: null},
             filler: {role: "filler"},
             harvester: {role: "harvester"},
