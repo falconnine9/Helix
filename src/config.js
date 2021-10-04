@@ -26,6 +26,7 @@ module.exports.config = {
             filler: 2,
             harvester: 3,
             hauler: 4,
+            soldier: 0,
             upgrader: 4
         },
         creepParts: {
@@ -35,6 +36,7 @@ module.exports.config = {
             filler: [CARRY, MOVE],
             harvester: [MOVE, WORK, WORK],
             hauler: [CARRY, CARRY, CARRY, MOVE, MOVE],
+            soldier: [ATTACK, ATTACK, MOVE, MOVE],
             upgrader: [CARRY, CARRY, MOVE, MOVE, WORK]
         },
         creepMemory: {
@@ -44,6 +46,7 @@ module.exports.config = {
             filler: {role: "filler"},
             harvester: {role: "harvester"},
             hauler: {role: "hauler"},
+            soldier: {role: "soldier"},
             upgrader: {role: "upgrader"}
         }
     }

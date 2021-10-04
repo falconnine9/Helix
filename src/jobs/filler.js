@@ -79,9 +79,7 @@ function fillTowers(creep, structs) {
     structs.reverse();
 
     if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-        const container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: s => s.structureType === STRUCTURE_STORAGE
-        });
+        const container = creep.room.storage;
 
         if (container) {
             const status = creep.withdraw(container, RESOURCE_ENERGY);
