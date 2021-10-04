@@ -14,6 +14,9 @@ const jobs = [
 if (!Memory.creepIndex) {
     Memory.creepIndex = 0;
 }
+if (!Memory.scoutInfo) {
+    Memory.scoutInfo = {};
+}
 
 
 module.exports.loop = () => {
