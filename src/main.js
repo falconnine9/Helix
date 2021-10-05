@@ -7,6 +7,7 @@ const jobs = [
     require("jobs.filler").allActions,
     require("jobs.harvester").allActions,
     require("jobs.hauler").allActions,
+    require("jobs.scout").allActions,
     require("jobs.soldier").allActions,
     require("jobs.upgrader").allActions,
 ];

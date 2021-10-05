@@ -6,6 +6,7 @@ mv jobs/defender.js jobs.defender.js
 mv jobs/filler.js jobs.filler.js
 mv jobs/harvester.js jobs.harvester.js
 mv jobs/hauler.js jobs.hauler.js
+mv jobs/scout.js jobs.scout.js
 mv jobs/soldier.js jobs.soldier.js
 mv jobs/upgrader.js jobs.upgrader.js
 

@@ -26,6 +26,7 @@ module.exports.config = {
             filler: 2,
             harvester: 3,
             hauler: 4,
+            scout: 3,
             soldier: 0,
             upgrader: 4
         },
@@ -36,6 +37,7 @@ module.exports.config = {
             filler: [CARRY, MOVE],
             harvester: [MOVE, WORK, WORK],
             hauler: [CARRY, CARRY, CARRY, MOVE, MOVE],
+            scout: [MOVE, MOVE],
             soldier: [ATTACK, ATTACK, MOVE, MOVE],
             upgrader: [CARRY, CARRY, MOVE, MOVE, WORK]
         },
@@ -46,6 +48,7 @@ module.exports.config = {
             filler: {role: "filler"},
             harvester: {role: "harvester"},
             hauler: {role: "hauler"},
+            scout: {role: "scout", exit: null, previousExit: null, previousTickRoom: null},
             soldier: {role: "soldier"},
             upgrader: {role: "upgrader"}
         }
