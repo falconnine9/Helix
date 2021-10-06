@@ -80,7 +80,7 @@ function findNewExits(creep) {
         } else if (exitRooms[a.toString()] in Memory.scoutInfo && !(exitRooms[b.toString()] in Memory.scoutInfo)) {
             if (doRandom) doRandom = false;
             return -1;
-        } else if (!(exitRooms[a.toString()] in Memory.scoutInfo) && exitRooms[b.toString()] in Memory.scoutInfo) {
+        } else {
             if (doRandom) doRandom = false;
             return 1;
         }
@@ -111,14 +111,23 @@ function doScouting(creep, room) {
         }
     }
 
+    let hostiles = {};
+    const hostileCreeps = creep.room.find(FIND_HOSTILE_CREEPS);
+    for (const hostile of hostileCreeps) {
+        if (hostile.owner in hostiles) {
+            hostiles[hostile.owner] += 1;
+        }
+        else {
+            hostiles[hostile.owner] = 1;
+        }
+    }
+
     Memory.scoutInfo[room.name] = {
         owner: owner,
         controllerLevel: controllerLevel,
         swampPercent: swampTiles / (50 * 50),
         wallPercent: wallTiles / (50 * 50),
         lenSources: creep.room.find(FIND_SOURCES).length,
-        sourceKeepers: creep.room.find(FIND_HOSTILE_STRUCTURES, {
-            filter: s => s.structureType === STRUCTURE_KEEPER_LAIR
-        }).length
+        hostiles: hostiles
     };
 }

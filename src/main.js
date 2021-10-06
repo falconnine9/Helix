@@ -1,3 +1,7 @@
+const determineCreepNumbers = require("global-actions.core").determineCreepNumbers;
+const clearUnusedMemory = require("global-actions.memory").clearUnusedMemory;
+
+
 const jobs = [
     require("structures.spawn").allActions,
 	require("structures.tower").allActions,
@@ -18,6 +22,7 @@ if (!Memory.creepIndex) {
 if (!Memory.scoutInfo) {
     Memory.scoutInfo = {};
 }
+require("declaration").injectMethods();
 
 
 module.exports.loop = () => {
@@ -28,5 +33,6 @@ module.exports.loop = () => {
         }
     }
 
-    require("global-actions.memory").clearUnusedMemory();
+    determineCreepNumbers();
+    clearUnusedMemory();
 }

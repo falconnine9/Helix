@@ -9,6 +9,12 @@ module.exports.allActions = (room) => {
 
 
 function doActions(creep) {
+    if (creep.room.name !== creep.memory.origin) {
+        const direction = Game.map.findExit(creep.room.name, creep.memory.origin);
+        creep.moveTo(creep.pos.findClosestByRange(direction));
+        return;
+    }
+
     if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
         const container = creep.room.storage;
         if (container) {

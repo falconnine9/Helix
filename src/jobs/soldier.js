@@ -18,6 +18,7 @@ function doActions(creep) {
         }
     } 
     if (!flag) return;
+    const config = utils.getConfig(creep);
     
     if (creep.room.name === flag.pos.roomName) {
         const hostile = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
@@ -25,9 +26,21 @@ function doActions(creep) {
             attackHostile(creep, hostile);
         }
         else {
-            const spawn = creep.pos.findClosestByRange(FIND_HOSTILE_SPAWNS);
-            if (spawn) {
-                attackHostile(creep, spawn);
+            if (config.attackStructures) {
+                const spawn = creep.pos.findClosestByRange(FIND_HOSTILE_SPAWNS);
+                if (spawn) {
+                    attackHostile(creep, spawn);
+                }
+                else {
+                    if (config.doSigning) {
+                        signHostileController(creep, config);
+                    }
+                }
+            }
+            else {
+                if (config.doSigning) {
+                    signHostileController(creep, config);
+                }
             }
         }
     }
@@ -38,7 +51,7 @@ function doActions(creep) {
             flag.pos.roomName,
             (roomName, fromRoom) => {
                 if (!(roomName in Memory.scoutInfo)) return 1;
-                if (Memory.scoutInfo[roomName].sourceKeepers > 0) return Infinity;
+                if (Memory.scoutInfo[roomName].hostiles["Source Keeper"] > 0) return Infinity;
                 return 1;
             }
         );
@@ -47,6 +60,16 @@ function doActions(creep) {
             if (exit === ERR_NO_PATH) return;
         }
         creep.moveTo(creep.pos.findClosestByRange(exit));
+    }
+}
+
+
+function signHostileController(creep, config) {
+    if (creep.room.controller.sign.username !== config.owner) {
+        const status = creep.signController(creep.room.controller, config.signText);
+        if (status === ERR_NOT_IN_RANGE) {
+            creep.moveTo(creep.room.controller);
+        }
     }
 }
 

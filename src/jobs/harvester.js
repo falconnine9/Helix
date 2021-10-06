@@ -9,6 +9,12 @@ module.exports.allActions = (room) => {
 
 
 function doActions(creep) {
+    if (creep.room.name !== creep.memory.origin) {
+        const direction = Game.map.findExit(creep.room.name, creep.memory.origin);
+        creep.moveTo(creep.pos.findClosestByRange(direction));
+        return;
+    }
+
     const source = creep.pos.findClosestByRange(FIND_SOURCES, {
         filter: s => s.energy > 0
     });

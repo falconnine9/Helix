@@ -1,3 +1,4 @@
+mv global-actions/core.js global-actions.core.js
 mv global-actions/memory.js global-actions.memory.js
 
 mv jobs/builder.js jobs.builder.js

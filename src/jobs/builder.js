@@ -1,5 +1,4 @@
 const utils = require("utils");
-const allConfig = require("config").config;
 
 
 module.exports.allActions = (room) => {
@@ -11,12 +10,6 @@ module.exports.allActions = (room) => {
 
 function doActions(creep) {
     const sites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
-    let config;
-    if (creep.room.name in allConfig) {
-        config = allConfig[creep.room.name];
-    } else {
-        config = allConfig["global"];
-    }
 
     if (sites.length > 0 && creep.room.name === creep.memory.origin) {
         sites.sort((a, b) => (a.progressTotal - a.progress) - (b.progressTotal - b.progress));

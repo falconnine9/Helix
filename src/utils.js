@@ -1,3 +1,6 @@
+const allConfig = require("config").config;
+
+
 module.exports.getCreepsOfRole = (room, role) => {
     let amount = 0;
     for (const creepName in Game.creeps) {
@@ -22,4 +25,15 @@ module.exports.listCreepsOfRole = (room, role) => {
         creeps.push(creep);
     }
     return creeps;
+}
+
+
+module.exports.getConfig = (creep) => {
+    let config;
+    if (creep.room.name in allConfig) {
+        config = allConfig[creep.memory.origin];
+    } else {
+        config = allConfig["global"];
+    }
+    return config;
 }

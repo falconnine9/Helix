@@ -9,6 +9,12 @@ module.exports.allActions = (room) => {
 
 
 function doActions(creep) {
+    if (creep.room.name !== creep.memory.origin) {
+        const direction = Game.map.findExit(creep.room.name, creep.memory.origin);
+        creep.moveTo(creep.pos.findClosestByRange(direction));
+        return;
+    }
+
     const structs = creep.room.find(FIND_MY_STRUCTURES, {
         filter: s => {
             if (s.structureType !== STRUCTURE_TOWER) {

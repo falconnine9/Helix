@@ -7,6 +7,9 @@
  *   Variables
  * owner - Your username
  * signText - The text to sign room controllers with
+ * attackStructures - Allow soldiers to attack hostile
+ *   structures
+ * doSigning - Allow soldiers to sign hostile controllers
  * wallLimit - The limit to repair walls and ramparts to
  * maxCreeps - The maximum amount of creeps allowed to
  *   be owned by the room
@@ -19,6 +22,8 @@ module.exports.config = {
         owner: "OwnerName",
         signText: "example",
         wallLimit: 7000,
+        attackStructures: true,
+        doSigning: true,
         maxCreeps: {
             builder: 0,
             conqueror: 0,
