@@ -2,30 +2,20 @@ const utils = require("utils");
 
 const hostileParts = [ATTACK, RANGED_ATTACK, HEAL, CLAIM];
 const hostileThreshold = 4;
+const siteCost = 600;
 
 
 module.exports.determineCreepNumbers = () => {
     for (const roomName in Game.rooms) {
         const room = Game.rooms[roomName];
-
-        if (isUnderAttack(room)) {
-            room.memory.underAttack = true;
-        } else {
-            room.memory.underAttack = false;
-        }
-
-        if (needsBuilders(room)) {
-            room.memory.needsBuilders = true;
-        }
-        else {
-            room.memory.needsBuilders = false;
-        }
+        isUnderAttack(room);
+        needsBuilders(room);
     }
 }
 
 
 function isUnderAttack(room) {
-    const hostiles = creep.room.find(FIND_HOSTILE_CREEPS, {
+    const hostiles = room.find(FIND_HOSTILE_CREEPS, {
         filter: creep => {
             for (const part of hostileParts) {
                 if (creep.body.includes(part)) {
@@ -35,32 +25,48 @@ function isUnderAttack(room) {
             return false;
         }
     });
-    return hostiles.length >= hostileThreshold;
+    if (hostiles.length >= hostileThreshold && !room.memory.isUnderAttack) {
+        room.memory.isUnderAttack = true;
+        room.memory.config.maxCreeps.defender += 3;
+        room.memory.config.maxCreeps.filler += 1;
+    }
+    else if (hostiles.length <= hostileThreshold && room.memory.isUnderAttack) {
+        room.memory.isUnderAttack = false;
+        room.memory.config.maxCreeps.defender -= 3;
+        room.memory.config.maxCreeps.filler -= 1;
+    }
 }
 
 
 function needsBuilders(room) {
-    const sites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
-    if (sites.length === 0) return false;
+    let siteTotalCost = 0;
+    const sites = room.find(FIND_MY_CONSTRUCTION_SITES);
+    if (sites.length === 0) return;
 
-    if (sites.length <= 3) {
-        if (utils.getCreepsOfRole(room.name, "builder") > 0) {
-            return false;
-        } else return true;
+    for (const site of sites) {
+        siteTotalCost += site.progressTotal - site.progress;
     }
-    else if (sites.length >= 4 && sites.length <= 10) {
-        if (utils.getCreepsOfRole(room.name, "builder") >= 2) {
-            return false;
-        } else return true;
+    
+    const siteAmount = Math.ceil(siteTotalCost / siteCost);
+    let currentBuilders = room.memory.config.maxCreeps.builder;
+    if (siteAmount <= 6) {
+        if (currentBuilders === 0) {
+            room.memory.config.maxCreeps.builder = 1;
+        }
     }
-    else if (sites >= 11 && sites <= 20) {
-        if (utils.getCreepsOfRole(room.name, "builder") >= 3) {
-            return false;
-        } else return true;
+    else if (siteAmount >= 7 && siteAmount <= 12) {
+        if (currentBuilders < 2 || currentBuilders > 2) {
+            room.memory.config.maxCreeps.builder = 2;
+        }
+    }
+    else if (siteAmount >= 13 && siteAmount <= 25) {
+        if (currentBuilders < 3 || currentBuilders > 3) {
+            room.memory.config.maxCreeps.builder = 3;
+        }
     }
     else {
-        if (utils.getCreepsOfRole(room.name, "builder") >= 4) {
-            return false;
-        } else return true;
+        if (currentBuilders < 4) {
+            room.memory.config.maxCreeps.builder = 4;
+        }
     }
 }

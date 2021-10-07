@@ -1,3 +1,4 @@
+const allConfig = require("config").config;
 const determineCreepNumbers = require("global-actions.core").determineCreepNumbers;
 const clearUnusedMemory = require("global-actions.memory").clearUnusedMemory;
 
@@ -21,6 +22,14 @@ if (!Memory.creepIndex) {
 }
 if (!Memory.scoutInfo) {
     Memory.scoutInfo = {};
+}
+for (const roomName in Game.rooms) {
+    const room = Game.rooms[roomName];
+    if (room.name in allConfig) {
+        room.memory.config = allConfig[room.name];
+    } else {
+        room.memory.config = allConfig.global;
+    }
 }
 require("declaration").injectMethods();
 

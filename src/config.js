@@ -32,6 +32,7 @@ module.exports.config = {
             harvester: 3,
             hauler: 4,
             scout: 3,
+            security: 0,
             soldier: 0,
             upgrader: 4
         },
@@ -43,6 +44,7 @@ module.exports.config = {
             harvester: [MOVE, WORK, WORK],
             hauler: [CARRY, CARRY, CARRY, MOVE, MOVE],
             scout: [MOVE, MOVE],
+            security: [ATTACK, ATTACK, MOVE, MOVE],
             soldier: [ATTACK, ATTACK, MOVE, MOVE],
             upgrader: [CARRY, CARRY, MOVE, MOVE, WORK]
         },
@@ -54,6 +56,7 @@ module.exports.config = {
             harvester: {role: "harvester"},
             hauler: {role: "hauler"},
             scout: {role: "scout", exit: null, previousExit: null, previousTickRoom: null},
+            security: {role: "security", room: null},
             soldier: {role: "soldier"},
             upgrader: {role: "upgrader"}
         }
