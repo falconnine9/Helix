@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "lib": ["esnext"],
+    "target": "es2017",
+    "moduleResolution": "Node",
+    "baseUrl": "src/",
+    "sourceMap": false,
+    "strict": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "noImplicitReturns": true,
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
+    "incremental": false
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
