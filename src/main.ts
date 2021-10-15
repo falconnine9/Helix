@@ -28,7 +28,7 @@ injectMethods();
 export const loop = (): void => {
     const structureUsed = allStructureActions();
     const creepUsed = allCreepJobs();
-    deleteExpiredCreeps();
+    if (Game.time % 5 === 0) deleteExpiredCreeps();
 }
 
 function deleteExpiredCreeps() {

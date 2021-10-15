@@ -89,7 +89,14 @@ function fillingState(hauler: Hauler): void {
         const containerStruct = findContainer(hauler);
         if (containerStruct) {
             creepMemory.container = containerStruct.id;
-        } else hauler.wander();
+        } else {
+            if (hauler.energyAmount() < Math.round(hauler.store.getCapacity(RESOURCE_ENERGY) / 8)) {
+                const resource = findResource(hauler);
+                creepMemory.resource = resource ? resource.id : null;
+                creepMemory.container = null;
+                creepMemory.state = "sourcing";
+            }
+        }
     }
 
     if (hauler.energyAmount() === 0) {

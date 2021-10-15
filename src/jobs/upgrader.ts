@@ -60,7 +60,7 @@ function gettingState(upgrader: Upgrader): void {
         const containerStruct = findContainer(upgrader);
         if (containerStruct) {
             creepMemory.container = containerStruct.id;
-        } else upgrader.wander();
+        }
     }
 
     if (upgrader.energyCapacity() === 0) {

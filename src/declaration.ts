@@ -1,8 +1,4 @@
 declare global {
-    const ROAD_SPAWN_TO_CONTROLLER = "roadToController";
-    const ROAD_SPAWN_TO_SOURCES = "roadToSources";
-    const ROAD_SPAWN_TO_EXITS = "roadToExits";
-
     interface Creep {
         energyAmount(): number;
         energyCapacity(): number;
@@ -11,7 +7,7 @@ declare global {
             target: RoomPosition | _HasRoomPosition,
             reactionTime?: number
         ): CreepMoveReturnCode | -2 | -5 | -7;
-        wander(): CreepMoveReturnCode;
+        wander(): CreepMoveReturnCode | -7;
     }
 
     interface CreepMemory {
@@ -50,6 +46,7 @@ declare global {
 
     interface ProgressStage {
         rcl?: number;
+        rclProgress?: number;
         roles?: {[role: string]: number};
         structures?: Array<BuildableStructureConstant | "roadToSources" | "roadToController" | "roadToExits">;
     }
@@ -94,8 +91,17 @@ export function injectMethods(): void {
         });
     }
 
-    Creep.prototype.wander = function(): CreepMoveReturnCode {
+    Creep.prototype.wander = function(): CreepMoveReturnCode | -7 {
         const direction = [1, 3, 5, 7][Math.floor(Math.random() * 4)] as DirectionConstant;
+        if (direction === TOP) {
+            if (this.pos.y - 1 === 0) return ERR_INVALID_TARGET;
+        } else if (direction === LEFT) {
+            if (this.pos.x - 1 === 0) return ERR_INVALID_TARGET;
+        } else if (direction === BOTTOM) {
+            if (this.pos.y + 1 === 49) return ERR_INVALID_TARGET;
+        } else {
+            if (this.pos.x + 1 === 49) return ERR_INVALID_TARGET;
+        }
         return this.move(direction);
     }
 

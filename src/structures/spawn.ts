@@ -1,5 +1,6 @@
 import { STAGES } from 'config';
 import { builderMemory, builderBodies } from 'jobs/builder';
+import { defenderMemory, defenderBodies } from 'jobs/defender';
 import { harvesterMemory, harvesterBodies } from 'jobs/harvester';
 import { haulerMemory, haulerBodies } from 'jobs/hauler';
 import { scoutMemory, scoutBodies } from 'jobs/scout';
@@ -14,6 +15,16 @@ declare global {
     interface SpawnMemory {
         needsEnergy: true | false;
     }
+}
+
+const roleInformation: {[role: string]: Array<CreepMemory | BodyPartConstant[][]>} = {
+    builder: [builderMemory, builderBodies],
+    defender: [defenderMemory, defenderBodies],
+    harvester: [harvesterMemory, harvesterBodies],
+    hauler: [haulerMemory, haulerBodies],
+    scout: [scoutMemory, scoutBodies],
+    supplier: [supplierMemory, supplierBodies],
+    upgrader: [upgraderMemory, upgraderBodies]
 }
 
 export function spawnActions(spawn: Spawn) {
@@ -39,37 +50,15 @@ export function spawnActions(spawn: Spawn) {
             const creepAmount = stage.roles[creep];
             if (spawn.room.getCreepsOfRole(creep) >= creepAmount) continue;
 
-            let body = null;
-            let memory = null;
-            switch (creep) {
-                case "builder":
-                    body = getBodyByEnergy(builderBodies, spawnEnergy);
-                    memory = builderMemory;
-                    break;
-                case "harvester":
-                    body = getBodyByEnergy(harvesterBodies, spawnEnergy);
-                    memory = harvesterMemory;
-                    break;
-                case "hauler":
-                    body = getBodyByEnergy(haulerBodies, spawnEnergy);
-                    memory = haulerMemory;
-                    break;
-                case "scout":
-                    body = getBodyByEnergy(scoutBodies, spawnEnergy);
-                    memory = scoutMemory;
-                    break;
-                case "supplier":
-                    body = getBodyByEnergy(supplierBodies, spawnEnergy);
-                    memory = supplierMemory;
-                    break;
-                case "upgrader":
-                    body = getBodyByEnergy(upgraderBodies, spawnEnergy);
-                    memory = upgraderMemory;
-                    break;
-            }
+            const body = getBodyByEnergy(
+                roleInformation[creep][1] as BodyPartConstant[][],
+                spawnEnergy
+            );
+            const memory = roleInformation[creep][0] as CreepMemory;
             if (body) {
-                spawn.spawnCreep(body, `${creep}-${Memory.creepIndex}`);
-                Memory.creeps[`${creep}-${Memory.creepIndex}`] = memory as CreepMemory;
+                spawn.spawnCreep(body, `${creep}-${Memory.creepIndex}`, {
+                    memory: memory
+                });
                 Memory.creeps[`${creep}-${Memory.creepIndex}`].origin = spawn.room.name;
                 Memory.creepIndex++;
                 return;

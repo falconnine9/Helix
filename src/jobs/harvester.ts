@@ -57,6 +57,5 @@ function harvestingState(harvester: Harvester): void {
         if (availableSources.length > 0) {
             creepMemory.source = availableSources[0].id;
         }
-        else harvester.wander();
     }
 }

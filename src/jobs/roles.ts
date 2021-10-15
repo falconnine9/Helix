@@ -1,4 +1,5 @@
 import { builderMemory, builderActions } from './builder';
+import { defenderMemory, defenderActions } from './defender';
 import { harvesterMemory, harvesterActions } from './harvester';
 import { haulerMemory, haulerActions } from './hauler';
 import { scoutMemory, scoutActions } from './scout';
@@ -13,6 +14,7 @@ interface Role {
 
 export const CREEP_ROLES: {[role: string]: Role} = {
     builder: {name: "builder", memory: builderMemory, behaviour: builderActions},
+    defender: {name: "defender", memory: defenderMemory, behaviour: defenderActions},
     harvester: {name: "harvester", memory: harvesterMemory, behaviour: harvesterActions},
     hauler: {name: "hauler", memory: haulerMemory, behaviour: haulerActions},
     scout: {name: "scout", memory: scoutMemory, behaviour: scoutActions},
