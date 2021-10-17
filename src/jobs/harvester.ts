@@ -16,7 +16,7 @@ export const harvesterMemory: HarvesterMemory = {
     state: "harvesting"
 };
 
-export const harvesterBodies: BodyPartConstant[][] = [
+export const harvesterBodies: Body[] = [
     [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     [WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE, MOVE, MOVE],
     [WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE],
@@ -35,8 +35,14 @@ export function harvesterActions(creep: Creep): void {
 
 function harvestingState(harvester: Harvester): void {
     const creepMemory = harvester.memory;
-    const sourcePoint = getById(creepMemory.source);
+    if (harvester.ticksToLive && harvester.ticksToLive < 5) {
+        if (creepMemory.source) {
+            Game.flags[`source-${creepMemory.source}`].memory.harvester = null;
+        }
+        return;
+    }
 
+    const sourcePoint = getById(creepMemory.source);
     if (sourcePoint) {
         if (sourcePoint.energy === 0) {
             creepMemory.source = null;
@@ -50,12 +56,18 @@ function harvestingState(harvester: Harvester): void {
     }
     else {
         if (Game.time % 3 !== 0) return;
-        const availableSources = harvester.room.find(FIND_SOURCES)
-            .filter(s => s.energy > 0)
-            .sort((a, b) => a.energy - b.energy);
-
-        if (availableSources.length > 0) {
-            creepMemory.source = availableSources[0].id;
+        const availableSourceFlags = _.filter(
+            Game.flags,
+            flag => flag.name.startsWith("source") && !flag.memory.harvester
+        );
+        if (availableSourceFlags.length > 0) {
+            const sourcesAtFlag = harvester.room.lookForAt(
+                LOOK_SOURCES,
+                availableSourceFlags[0]
+            );
+            if (sourcesAtFlag.length === 0) return;
+            availableSourceFlags[0].memory.harvester = harvester.id;
+            creepMemory.source = sourcesAtFlag[0].id;
         }
     }
 }

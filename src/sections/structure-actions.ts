@@ -2,7 +2,6 @@ import { spawnActions } from 'structures/spawn';
 import { towerActions } from 'structures/tower';
 
 export function allStructureActions(): number {
-    if (Game.time % 60 === 0) updateStructureList();
     const cpuPrior = Game.cpu.getUsed();
 
     for (const structure of Memory.towerList) {
@@ -20,17 +19,4 @@ export function allStructureActions(): number {
     }
 
     return Game.cpu.getUsed() - cpuPrior;
-}
-
-function updateStructureList(): void {
-    for (const room of Object.values(Game.rooms)) {
-        const roomTowers: StructureTower[] = room.find(FIND_MY_STRUCTURES, {
-            filter: s => s.structureType === STRUCTURE_TOWER
-        });
-        for (const tower of roomTowers) {
-            if (!Memory.towerList.includes(tower.id)) {
-                Memory.towerList.push(tower.id);
-            }
-        }
-    }
 }

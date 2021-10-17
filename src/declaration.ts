@@ -1,8 +1,19 @@
+const creepStateEmotes: {[state: string]: string} = {
+    "building": "🛠️",
+    "filling": "📦",
+    "getting": "🚚",
+    "repairing": "🛠️",
+    "sourcing": "🔎"
+};
+
 declare global {
+    type Body = BodyPartConstant[];
+
     interface Creep {
         energyAmount(): number;
         energyCapacity(): number;
         isCombative(): boolean;
+        setState(state: string, showPublic?: boolean): void;
         travelTo(
             target: RoomPosition | _HasRoomPosition,
             reactionTime?: number
@@ -14,6 +25,10 @@ declare global {
         role: string;
         origin?: string;
         state: string;
+    }
+
+    interface FlagMemory {
+        harvester?: Id<Harvester> | null;
     }
 
     interface Memory {
@@ -31,6 +46,8 @@ declare global {
 
     interface RoomMemory {
         exitTiles: RoomPosition[] | undefined;
+        roadSpawnToControllerPath: string | null;
+        roadSpawnToSourcesPath: {[source: string]: string | null};
         wallHitsLimit: number;
     }
 
@@ -48,7 +65,8 @@ declare global {
         rcl?: number;
         rclProgress?: number;
         roles?: {[role: string]: number};
-        structures?: Array<BuildableStructureConstant | "roadToSources" | "roadToController" | "roadToExits">;
+        structures?: (BuildableStructureConstant | string)[];
+        cores?: string[];
     }
 
     interface Structure {
@@ -80,10 +98,18 @@ export function injectMethods(): void {
         return role === "defender" || role === "soldier";
     }
 
+    Creep.prototype.setState = function(state: string, showPublic?: boolean): void {
+        if (state in creepStateEmotes) {
+            this.say(creepStateEmotes[state], showPublic);
+        }
+        this.memory.state = state;
+    }
+
     Creep.prototype.travelTo = function(
         target: RoomPosition | _HasRoomPosition,
         reactionTime?: number
     ): CreepMoveReturnCode | -2 | -5 | -7 {
+        if (this.fatigue > 0) return -11;
         const movePosition = target instanceof RoomPosition ? target : target.pos;
         if (this.pos.isNearTo(movePosition)) return OK;
         return this.moveTo(movePosition, {

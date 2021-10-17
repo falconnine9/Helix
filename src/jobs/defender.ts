@@ -16,7 +16,7 @@ export const defenderMemory: DefenderMemory = {
     state: "defending"
 };
 
-export const defenderBodies: BodyPartConstant[][] = [
+export const defenderBodies: Body[] = [
     [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE,
      ATTACK, MOVE, RANGED_ATTACK, MOVE, ATTACK, MOVE, RANGED_ATTACK, MOVE,
      ATTACK, MOVE, RANGED_ATTACK, MOVE, ATTACK, MOVE, RANGED_ATTACK, MOVE],

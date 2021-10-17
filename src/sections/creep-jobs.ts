@@ -6,6 +6,7 @@ const sacraficeImmune = ["defender", "soldier"];
 export function allCreepJobs(): number {
     const cpuPrior = Game.cpu.getUsed();
     const healthyCreeps = Object.values(Game.creeps).filter(creep => {
+        if (creep.spawning) return false;
         if (creep.hits <= creep.hitsMax / 2) {
             if (sacraficeImmune.includes(creep.memory.role)) return true;
             creep.say("Sacrafice");

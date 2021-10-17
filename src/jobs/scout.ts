@@ -32,7 +32,7 @@ export const scoutMemory: ScoutMemory = {
     state: "scouting"
 };
 
-export const scoutBodies: BodyPartConstant[][] = [
+export const scoutBodies: Body[] = [
     [MOVE]
 ];
 

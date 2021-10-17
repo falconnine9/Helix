@@ -18,7 +18,7 @@ export const haulerMemory: HaulerMemory = {
     state: "sourcing"
 };
 
-export const haulerBodies: BodyPartConstant[][] = [
+export const haulerBodies: Body[] = [
     [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
     [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
@@ -65,7 +65,7 @@ function sourcingState(hauler: Hauler): void {
         const containerStruct = findContainer(hauler);
         creepMemory.container = containerStruct ? containerStruct.id : null;
         creepMemory.resource = null;
-        creepMemory.state = "filling";
+        hauler.setState("filling");
     }
 }
 
@@ -103,7 +103,7 @@ function fillingState(hauler: Hauler): void {
         const resource = findResource(hauler);
         creepMemory.resource = resource ? resource.id : null;
         creepMemory.container = null;
-        creepMemory.state = "sourcing";
+        hauler.setState("sourcing");
     }
 }
 

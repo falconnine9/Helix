@@ -16,7 +16,7 @@ export const supplierMemory: SupplierMemory = {
     state: "getting"
 };
 
-export const supplierBodies: BodyPartConstant[][] = [
+export const supplierBodies: Body[] = [
     [CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
     [CARRY, CARRY, CARRY, MOVE, MOVE],
     [CARRY, MOVE]
@@ -65,7 +65,7 @@ function fillingState(supplier: Supplier) {
 
     if (supplier.energyAmount() === 0) {
         creepMemory.fillStructure = null;
-        creepMemory.state = "getting";
+        supplier.setState("getting");
     }
 }
 
@@ -86,7 +86,7 @@ function gettingState(supplier: Supplier) {
     if (supplier.energyCapacity() === 0) {
         const container = findNewStructure(supplier);
         creepMemory.fillStructure = container ? container.id : null;
-        creepMemory.state = "filling";
+        supplier.setState("filling");
     }
 }
 

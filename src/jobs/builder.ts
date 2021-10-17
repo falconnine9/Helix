@@ -20,7 +20,7 @@ export const builderMemory: BuilderMemory = {
     state: "building"
 };
 
-export const builderBodies: BodyPartConstant[][] = [
+export const builderBodies: Body[] = [
     [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
     [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
@@ -69,20 +69,22 @@ function buildingState(builder: Builder): void {
                 const bDelta = b.progressTotal - b.progress;
                 return aDelta - bDelta;
             });
+            creepMemory.constructionSite = sites[0].id;
         }
         else {
             const towerAmount = builder.room.find(FIND_MY_STRUCTURES, {
                 filter: s => s.structureType === STRUCTURE_TOWER
             }).length;
             if (towerAmount === 0) {
-                creepMemory.state = "repairing";
+                builder.setState("repairing");
+                return;
             }
             builder.wander();
         }
     }
 
     if (builder.energyAmount() === 0) {
-        creepMemory.state = "getting";
+        builder.setState("getting");
     }
 }
 
@@ -124,7 +126,7 @@ function repairingState(builder: Builder): void {
     }
 
     if (builder.energyAmount() === 0) {
-        creepMemory.state = "getting";
+        builder.setState("getting");
     }
 }
 
@@ -168,9 +170,9 @@ function gettingState(builder: Builder): void {
     if (builder.energyCapacity() === 0) {
         creepMemory.container = null;
         if (creepMemory.repairingSite && !creepMemory.constructionSite) {
-            creepMemory.state = "repairing";
+            builder.setState("repairing");
         } else {
-            creepMemory.state = "building";
+            builder.setState("building");
         }
     }
 }

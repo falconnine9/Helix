@@ -16,7 +16,7 @@ export const upgraderMemory: UpgraderMemory = {
     state: "getting"
 };
 
-export const upgraderBodies: BodyPartConstant[][] = [
+export const upgraderBodies: Body[] = [
     [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
     [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
@@ -65,7 +65,7 @@ function gettingState(upgrader: Upgrader): void {
 
     if (upgrader.energyCapacity() === 0) {
         creepMemory.container = null;
-        creepMemory.state = "upgrading";
+        upgrader.setState("upgrading");
     }
 }
 
@@ -84,7 +84,7 @@ function upgradingState(upgrader: Upgrader) {
     if (upgrader.energyAmount() === 0) {
         const containerStruct = findContainer(upgrader);
         creepMemory.container = containerStruct ? containerStruct.id : null;
-        creepMemory.state = "getting";
+        upgrader.setState("getting");
     }
 }
 
