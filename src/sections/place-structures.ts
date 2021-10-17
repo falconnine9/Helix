@@ -1,10 +1,15 @@
 import { STAGES } from 'config';
+import { rampartsAroundController, rampartsAroundSpawn } from 'placements/ramparts';
 import { roadsSpawnToController, roadsSpawnToSources, roadsAroundSpawn } from 'placements/roads';
+import { placeStorage } from 'placements/storage';
 
 const placementFunctions: {[placement: string]: CallableFunction} = {
+    "rampartsAroundController": rampartsAroundController,
+    "rampartsAroundSpawn": rampartsAroundSpawn,
     "roadAroundSpawns": roadsAroundSpawn,
     "roadSpawnToController": roadsSpawnToController,
-    "roadSpawnToSources": roadsSpawnToSources
+    "roadSpawnToSources": roadsSpawnToSources,
+    "storage": placeStorage
 };
 
 export function placeStructuresByStage(): number {

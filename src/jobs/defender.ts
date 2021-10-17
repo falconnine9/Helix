@@ -1,3 +1,5 @@
+import { SIGN_TEXT, OWNER } from 'config';
+
 declare global {
     interface Defender extends Creep {
         memory: DefenderMemory;
@@ -56,6 +58,7 @@ function defendingState(defender: Defender): void {
             return;
         }
     }
+
     else {
         if (Game.time % 3 !== 0) return;
         const hostiles = defender.room.find(FIND_HOSTILE_CREEPS, {
@@ -78,6 +81,22 @@ function defendingState(defender: Defender): void {
                 } else return 0;
             });
             creepMemory.hostile = hostiles[0].id;
+            return;
+        }
+
+        const controller = defender.room.controller;
+        if (!controller) {
+            defender.wander();
+            return;
+        }
+        if (!controller.sign
+            || controller.sign.text !== SIGN_TEXT
+            || controller.sign.username !== OWNER) {
+            if (defender.pos.isNearTo(controller.pos)) {
+                defender.signController(controller, SIGN_TEXT)
+            } else {
+                defender.travelTo(controller);
+            }
         } else defender.wander();
     }
 }

@@ -80,6 +80,26 @@ declare global {
     function getById<T>(id: Id<T> | null | undefined): T | null;
 }
 
+export function createMemoryEntries(): void {
+    if (!Memory.creepIndex) {
+        Memory.creepIndex = 0;
+    }
+    if (!Memory.allies) {
+        Memory.allies = [];
+    }
+    if (!Memory.scoutInfo) {
+        Memory.scoutInfo = {};
+    }
+    if (!Memory.towerList) {
+        Memory.towerList = [];
+    }
+    for (const room of Object.values(Game.rooms)) {
+        if (!room.memory.wallHitsLimit) {
+            room.memory.wallHitsLimit = 2000;
+        }
+    }
+}
+
 export function injectMethods(): void {
     global.getById = <T>(id: Id<T> | null | undefined): T | null => {
         return id ? Game.getObjectById(id) as T : null;

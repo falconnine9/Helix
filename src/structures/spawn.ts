@@ -84,7 +84,7 @@ function handleBuilderCore(spawn: Spawn, spawnEnergy: number): boolean {
         s => s.progressTotal - s.progress
     ));
     if (allSiteProgress > 0) {
-        const amountOfBuilders = Math.ceil(allSiteProgress / 3000);
+        const amountOfBuilders = Math.ceil(allSiteProgress / 4000);
         if (spawn.room.getCreepsOfRole("builder") >= amountOfBuilders) return false;
         const body = getBodyByEnergy(builderBodies, spawnEnergy);
         if (body) {
@@ -116,7 +116,7 @@ function handleBuilderCore(spawn: Spawn, spawnEnergy: number): boolean {
             s2 => s2.hitsMax - s2.hits
         ));
         if (allStructProgress > 0) {
-            const amountOfBuilders = Math.ceil(allSiteProgress / 3000);
+            const amountOfBuilders = Math.ceil(allSiteProgress / 4000);
             if (spawn.room.getCreepsOfRole("builder") >= amountOfBuilders) return false;
             const body = getBodyByEnergy(builderBodies, spawnEnergy);
             if (body) {

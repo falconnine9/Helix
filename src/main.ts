@@ -8,23 +8,12 @@
  */
 
 import { SHOW_USED_CPU_IN_CONSOLE } from 'config';
-import { injectMethods } from 'declaration';
+import { injectMethods, createMemoryEntries } from 'declaration';
 import { allCreepJobs } from 'sections/creep-jobs';
 import { allStructureActions } from 'sections/structure-actions';
 import { placeStructuresByStage } from 'sections/place-structures';
 
-if (!Memory.creepIndex) {
-    Memory.creepIndex = 0;
-}
-if (!Memory.allies) {
-    Memory.allies = [];
-}
-if (!Memory.scoutInfo) {
-    Memory.scoutInfo = {};
-}
-if (!Memory.towerList) {
-    Memory.towerList = [];
-}
+createMemoryEntries();
 injectMethods();
 
 export const loop = (): void => {

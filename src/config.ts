@@ -8,7 +8,7 @@ export const STAGES: ProgressStage[] = [
     {cores: ["builderCore"]},
     {structures: ["roadSpawnToController"]},
     {rcl: 3, roles: {defender: 2, upgrader: 4}, structures: ["roadSpawnToSources"]},
-    {rcl: 4, roles: {supplier: 1}, structures: [STRUCTURE_TOWER]}
+    {rcl: 4, roles: {supplier: 1}, structures: [STRUCTURE_STORAGE]}
 ];
 
 export const CPU_PRIORITY: {[role: string]: number} = {
@@ -20,3 +20,6 @@ export const CPU_PRIORITY: {[role: string]: number} = {
     upgrader: 6,
     scout: 7
 };
+
+export const SIGN_TEXT = "SIGN_TEXT";
+export const OWNER = "YOUR_USERNAME";
